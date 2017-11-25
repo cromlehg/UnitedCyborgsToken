@@ -12,12 +12,6 @@ contract Mainsale is CommonSale {
   
   uint public bountyTokensPercent;
   
-  uint public lockPeriod;
-
-  function setLockPeriod(uint newLockPeriod) public onlyOwner {
-    lockPeriod = newLockPeriod;
-  }
-
   function setFoundersTokensPercent(uint newFoundersTokensPercent) public onlyOwner {
     foundersTokensPercent = newFoundersTokensPercent;
   }
@@ -35,14 +29,12 @@ contract Mainsale is CommonSale {
   }
 
   function finishMinting() public whenNotPaused onlyOwner {
-    uint summaryTokensPercent = bountyTokensPercent + foundersTokensPercent;
+    uint summaryTokensPercent = bountyTokensPercent.add(foundersTokensPercent);
     uint mintedTokens = token.totalSupply();
-    uint summaryFoundersTokens = mintedTokens.mul(summaryTokensPercent).div(percentRate.sub(summaryTokensPercent));
-    uint totalSupply = summaryFoundersTokens + mintedTokens;
-    uint foundersTokens = totalSupply.mul(foundersTokensPercent).div(percentRate);
-    uint bountyTokens = totalSupply.mul(bountyTokensPercent).div(percentRate);
+    uint allTokens = mintedTokens.mul(percentRate).div(percentRate.sub(summaryTokensPercent));
+    uint foundersTokens = allTokens.mul(foundersTokensPercent).div(percentRate);
+    uint bountyTokens = allTokens.mul(bountyTokensPercent).div(percentRate);
     token.mint(this, foundersTokens);
-    token.lock(foundersTokensWallet, lockPeriod * 1 days);
     token.transfer(foundersTokensWallet, foundersTokens);
     token.mint(this, bountyTokens);
     token.transfer(bountyTokensWallet, bountyTokens);
