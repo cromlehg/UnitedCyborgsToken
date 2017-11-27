@@ -18,9 +18,26 @@ contract StagedCrowdsale is Pausable {
 
   uint public invested;
 
-  uint public hardCap;
+  uint public hardcap;
+
+  uint public minInvestedLimit;
  
   Milestone[] public milestones;
+
+  modifier minInvestLimited(uint value) {
+    require(value >= minInvestedLimit);
+    _;
+  }
+
+  modifier saleIsOn() {
+    require(milestones.length > 0 && now >= start && now < lastSaleDate());
+    _;
+  }
+  
+  modifier isUnderHardCap() {
+    require(invested < hardcap);
+    _;
+  }
 
   function milestonesCount() public constant returns(uint) {
     return milestones.length;
@@ -30,8 +47,12 @@ contract StagedCrowdsale is Pausable {
     start = newStart;
   }
 
+  function setMinInvestedLimit(uint newMinInvestedLimit) public onlyOwner {
+    minInvestedLimit = newMinInvestedLimit;
+  }
+
   function setHardcap(uint newHardcap) public onlyOwner {
-    hardCap = newHardcap;
+    hardcap = newHardcap;
   }
 
   function addMilestone(uint period, uint bonus) public onlyOwner {
@@ -89,22 +110,12 @@ contract StagedCrowdsale is Pausable {
     totalPeriod = 0;
   }
 
-  modifier saleIsOn() {
-    require(milestones.length > 0 && now >= start && now < lastSaleDate());
-    _;
-  }
-  
-  modifier isUnderHardCap() {
-    require(invested <= hardCap);
-    _;
-  }
-  
   function lastSaleDate() public constant returns(uint) {
     require(milestones.length > 0);
     return start + totalPeriod * 1 days;
   }
 
-  function currentMilestone() public saleIsOn constant returns(uint) {
+  function currentMilestone() public saleIsOn isUnderHardCap constant returns(uint) {
     uint previousDate = start;
     for(uint i=0; i < milestones.length; i++) {
       if(now >= previousDate && now < previousDate + milestones[i].period * 1 days) {

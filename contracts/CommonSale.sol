@@ -11,8 +11,6 @@ contract CommonSale is StagedCrowdsale {
 
   uint public percentRate = 100;
 
-  uint public minPrice;
-
   uint public price;
 
   UnitedCyborgsToken public token;
@@ -26,10 +24,6 @@ contract CommonSale is StagedCrowdsale {
     directMintAgent = newDirectMintAgent;
   }
   
-  function setMinPrice(uint newMinPrice) public onlyOwner {
-    minPrice = newMinPrice;
-  }
-
   function setWallet(address newWallet) public onlyOwner {
     wallet = newWallet;
   }
@@ -47,16 +41,15 @@ contract CommonSale is StagedCrowdsale {
   }
 
   function createTokens() public whenNotPaused payable {
-    require(msg.value >= minPrice);
     wallet.transfer(msg.value);
     mintTokens(msg.sender, msg.value);
   }
 
-  function mintTokens(address to, uint weiInvested) internal {
+  function mintTokens(address to, uint weiInvested) internal minInvestLimited(weiInvested) {
     uint milestoneIndex = currentMilestone();
     Milestone storage milestone = milestones[milestoneIndex];
     invested = invested.add(msg.value);
-    uint tokens = weiInvested.mul(1 ether).div(price);
+    uint tokens = weiInvested.mul(price).div(1 ether);
     uint bonusTokens = tokens.mul(milestone.bonus).div(percentRate);
     uint tokensWithBonus = tokens.add(bonusTokens);
     token.mint(this, tokensWithBonus);
