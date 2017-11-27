@@ -294,7 +294,7 @@ contract('Crowdsale', function(wallets) {
 		            'totalSupply'          : allTokens.add(ether(1300).mul(2).add(ether(1200).mul(2)).add(ether(1100)))},
 
 	            {       'address'              : wallets[mainsaleInvestorsStartIndex + 5], 
-			    'invested'             : ether(11), 
+			    'invested'             : ether(1), 
 			    'tokens'               : ether(1100), 
 			    'afterSummaryInvested' : ether(6),
 		            'afterActualInvested'  : ether(3),
@@ -358,7 +358,9 @@ contract('Crowdsale', function(wallets) {
       console.log('Check current stage.')
       let stageFromContractIndex = await currentSale.currentMilestone()
       stageFromContractIndex.should.be.bignumber.equal(i)
-      stageFromContract = await currentSale.stages(stageFromContractIndex)
+
+      console.log('Check current stage properties.')
+      stageFromContract = await currentSale.milestones(stageFromContractIndex)
       stageFromContract[0].should.be.bignumber.equal(stage['period'])
       stageFromContract[1].should.be.bignumber.equal(stage['bonus'])
 
@@ -415,18 +417,14 @@ contract('Crowdsale', function(wallets) {
       curContractBalance = await currentSale.invested()
       curContractBalance.should.be.bignumber.equal(investor['afterSummaryInvested'])
 
-      console.log('Check contract minted field balance.')
-      curContractBalance = await currentSale.minted()
-      curContractBalance.should.be.bignumber.equal(investor['totalSupply'].sub(allTokens))
-
       console.log('Check rejection of transfer operation.')
       var transferredValue = investor['tokens'].mul(transferredK)
       await this.token.transfer(defInvestor, transferredValue, {from: investor['address']}).should.be.rejectedWith(EVMThrow)
 
     }
 
-    tempSummaryMinted = stages[2]['investors'][1]['totalSupply'].sub(allTokens)
-    allTokens = stages[2]['investors'][1]['totalSupply']
+    tempSummaryMinted = stages[3]['investors'][1]['totalSupply'].sub(allTokens)
+    allTokens = stages[3]['investors'][1]['totalSupply']
 
     console.log('Check summary minted.')
     tempTotalSupply = await this.token.totalSupply()
@@ -438,24 +436,14 @@ contract('Crowdsale', function(wallets) {
 
     console.log('Check contract invest field balance.')
     curContractBalance = await currentSale.invested()
-    curContractBalance.should.be.bignumber.equal(stages[2]['investors'][1]['afterSummaryInvested'])
+    curContractBalance.should.be.bignumber.equal(stages[3]['investors'][1]['afterSummaryInvested'])
 
-    tempCurContractBalance = stages[2]['investors'][1]['afterActualInvested']
+    tempCurContractBalance = stages[3]['investors'][1]['afterActualInvested']
 
     console.log('Check master wallet balance.')
     curMasterBalance = await web3.eth.getBalance(masterWallet)
     localMasterBalance = tempCurContractBalance.mul(masterWalletK)
     curMasterBalance.should.be.bignumber.equal(curMasterBalance)
-
-    console.log('Check sec wallet balance.')
-    curSecBalance = await web3.eth.getBalance(secWallet)
-    localSecBalance = tempCurContractBalance.mul(secWalletK)
-    curSecBalance.should.be.bignumber.equal(curSecBalance)
-
-    console.log('Check dev wallet balance.')
-    curDevBalance = await web3.eth.getBalance(devWallet)
-    localDevBalance = tempCurContractBalance.mul(devWalletK)
-    curDevBalance.should.be.bignumber.equal(curDevBalance)
 
     console.log('Check contract zero balance.')
     tempCurContractBalance = await web3.eth.getBalance(currentSale.address)
@@ -486,18 +474,9 @@ contract('Crowdsale', function(wallets) {
     var currentSaleMinted = await currentSale.minted()	  
     currentSaleMinted.div(filter).toFixed(0).should.be.bignumber.equal(tempSummaryMinted.div(filter).toFixed(0)) 
 
+    bountyTokensWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A04"
 
-    devTokensWallet = "0x97f2f8a94986d9049147590e12a64ffaa9f946a8"
-
-    secTokensWallet = "0xc76b0d5bbc2bf9b760ebd797dacd3a683cb8498f"
-
-    bountyTokensWallet = "0x872215ccf488031991f7dcc65e80a7c1fd497e75"
-
-    foundersTokensWallet = "0x49ecc9e56979c884b28d8c791890e279ab1ec5f4"
-
-    growthTokensWallet = "0x59ecc9e56979c884b28d8c791890e279ab1ec5f4"
-
-    advisorsTokensWallet = "0x7bb6dbc29f8adb3a7627ea65372fe471509b7698"
+    foundersTokensWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A05"
 
     console.log('Check bounty tokens.')
     bountyTokens = tempSummaryMinted.mul(bountyTokensK)
