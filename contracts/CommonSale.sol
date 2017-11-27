@@ -36,7 +36,7 @@ contract CommonSale is StagedCrowdsale {
     token = UnitedCyborgsToken(newToken);
   }
 
-  function directMint(address to, uint investedWei) public onlyDirectMintAgentOrOwner saleIsOn {
+  function directMint(address to, uint investedWei) public onlyDirectMintAgentOrOwner {
     mintTokens(to, investedWei);
   }
 
@@ -48,12 +48,11 @@ contract CommonSale is StagedCrowdsale {
   function mintTokens(address to, uint weiInvested) internal minInvestLimited(weiInvested) {
     uint milestoneIndex = currentMilestone();
     Milestone storage milestone = milestones[milestoneIndex];
-    invested = invested.add(msg.value);
+    invested = invested.add(weiInvested);
     uint tokens = weiInvested.mul(price).div(1 ether);
-    uint bonusTokens = tokens.mul(milestone.bonus).div(percentRate);
-    uint tokensWithBonus = tokens.add(bonusTokens);
-    token.mint(this, tokensWithBonus);
-    token.transfer(to, tokensWithBonus);
+    if(milestone.bonus > 0) tokens = tokens.add(tokens.mul(milestone.bonus).div(percentRate));
+    token.mint(this, tokens);
+    token.transfer(to, tokens);
   }
 
   function() external payable {

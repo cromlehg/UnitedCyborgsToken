@@ -15,7 +15,7 @@ contract Configurator is Ownable {
   Mainsale public mainsale;
 
   function deploy() public onlyOwner {
-    owner = 0x95EA6A4ec9F80436854702e5F05d238f27166A03;
+    //owner = 0x95EA6A4ec9F80436854702e5F05d238f27166A03;
 
     token = new UnitedCyborgsToken();
 
@@ -34,10 +34,10 @@ contract Configurator is Ownable {
     mainsale = new Mainsale();
 
     mainsale.setToken(token);
-    presale.addMilestone(7, 30);
-    presale.addMilestone(7, 20);
-    presale.addMilestone(7, 10);
-    presale.addMilestone(7, 0);
+    mainsale.addMilestone(7, 30);
+    mainsale.addMilestone(7, 20);
+    mainsale.addMilestone(7, 10);
+    mainsale.addMilestone(7, 0);
     mainsale.setPrice(1000000000000000000000);
     mainsale.setWallet(0x95EA6A4ec9F80436854702e5F05d238f27166A03);
     mainsale.setFoundersTokensWallet(0x95EA6A4ec9F80436854702e5F05d238f27166A03);
