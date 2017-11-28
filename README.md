@@ -50,8 +50,8 @@ Investor must not use other wallets, coinmarkets or stocks. Can lose money.
 * _Minimal insvested limit_     : 0.1 ETH
 * _Price_                       : 1 ETH = 1000 UC17
 * _Bounty tokens percent_       : 5% of Presale tokens
-* _Founders tokens percent_     : 20% of Presale tokens
-* _For sale tokens percent_     : 75% of Presale tokens
+* _Founders tokens percent_     : 13% of Presale tokens
+* _For sale tokens percent_     : 82% of Presale tokens
 * _Founders tokens wallet_      :  
 * _Bounty tokens wallet_        : 
 
