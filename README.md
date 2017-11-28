@@ -64,8 +64,8 @@ Investor must not use other wallets, coinmarkets or stocks. Can lose money.
 
 #### Presale
 * _Hardcap_                    : 6000 ETH
-* _Period_                     : 30 days 
-* _Start_                      : Wed, 10 Jan 2018 13:00:00 GMT
+* _Period_                     : 28 days 
+* _Start_                      : Tue, 30 Jan 2018 13:00:00 GMT
 * _Wallet_                     : 
 * _Contract owner_             : 
 
@@ -75,8 +75,8 @@ _Milestones_
 
 #### ICO
 * _Hardcap_                    : 60 000 ETH
-* _Period_                     : 30 days
-* _Start_                      : Sun, 10 Jun 2018 13:00:00 GMT
+* _Period_                     : 28 days
+* _Start_                      : Thu, 03 May 2018 13:00:00 GMT
 * _Wallet_                     : 
 * _Contract owner_             : 
 
