@@ -57,9 +57,9 @@ contract('Crowdsale', function(wallets) {
 
     var masterWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A03"
 
-    var bountyTokensWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A03"
+    var bountyTokensWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A04"
 
-    var foundersTokensWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A03"
+    var foundersTokensWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A05"
 
     const presaleStart = 1517317200
 
@@ -457,6 +457,7 @@ contract('Crowdsale', function(wallets) {
     await currentSale.finishMinting().should.be.fulfilled
    
     tempSummaryMinted = allTokens.div((new BigNumber(1)).sub(summaryTokensK))
+    allTokens = tempSummaryMinted
 
     var filter = new BigNumber(1000000)
 
@@ -468,32 +469,29 @@ contract('Crowdsale', function(wallets) {
     var currentSaleMinted = await this.token.totalSupply()	  
     currentSaleMinted.div(filter).toFixed(0).should.be.bignumber.equal(tempSummaryMinted.div(filter).toFixed(0)) 
 
-    bountyTokensWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A04"
-
-    foundersTokensWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A05"
-
     console.log('Check bounty tokens.')
-    bountyTokens = tempSummaryMinted.mul(bountyTokensK)
-    bountyTokensFromContract = await this.token.balanceOf(bountyTokensWallet)
+    var bountyTokens = tempSummaryMinted.mul(bountyTokensK)
+    var bountyTokensFromContract = await this.token.balanceOf(bountyTokensWallet)
     bountyTokensFromContract.toFixed(0).should.be.bignumber.equal(bountyTokens.toFixed(0))
 
     console.log('Check founders tokens.')
-    foundersTokens = tempSummaryMinted.mul(foundersTokensK)
-    foundersTokensFromContract = await this.token.balanceOf(foundersTokensWallet)
+    var foundersTokens = tempSummaryMinted.mul(foundersTokensK)
+    var foundersTokensFromContract = await this.token.balanceOf(foundersTokensWallet)
     foundersTokensFromContract.toFixed(0).should.be.bignumber.equal(foundersTokens.toFixed(0))
 
     console.log('Check tokens transfer')	  
-    transferredValue = softcapMinted.mul(new BigNumber(0.5))
-    await this.token.transfer(owner, transferredValue, {from: defInvestor}).should.be.fulfilled
+    var investor = stages[0]['investors'][0]
+    var investorTokens = investor['tokens']
+    transferredValue = investorTokens.mul(new BigNumber(0.5))
+    await this.token.transfer(defInvestor, transferredValue, {from: investor['address']}).should.be.fulfilled
 
     console.log('Check tokens balances after transfer')	  
-    var currentTokens = softcapMinted.sub(transferredValue)
     var defInvTokens = await this.token.balanceOf(defInvestor)
-    defInvTokens.should.be.bignumber.equal(currentTokens)
+    defInvTokens.should.be.bignumber.equal(transferredValue)
 
-    var currentTokensOwner = softcapMinted.sub(currentTokens)
-    var ownerTokens = await this.token.balanceOf(owner)
-    ownerTokens.should.be.bignumber.equal(currentTokensOwner)
+    var currentTokens = investor['tokens'].sub(transferredValue)
+    var fromTokens = await this.token.balanceOf(investor['address'])
+    fromTokens.should.be.bignumber.equal(currentTokens)
 
     console.log('Finished!')	  
 

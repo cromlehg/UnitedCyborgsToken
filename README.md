@@ -1,6 +1,6 @@
 ![UnitedCyborgsToken](logo.png "UnitedCyborgsToken")
 
-# Vestarin smart contract
+# United Cyborgs smart contract
 
 * _Standart_        : ERC20
 * _Name_            : United Cyborgs
@@ -70,6 +70,8 @@ Investor must not use other wallets, coinmarkets or stocks. Can lose money.
 * _Contract owner_             : 
 
 _Milestones_
+1. 14 days                     : bonus +50% 
+2. 14 days                     : bonus +40% 
 
 #### ICO
 * _Hardcap_                    : 60 000 ETH
@@ -79,4 +81,7 @@ _Milestones_
 * _Contract owner_             : 
 
 _Milestones_
-
+1. 7 days                      : bonus +30% 
+2. 7 days                      : bonus +20% 
+3. 7 days                      : bonus +10% 
+4. 7 days                      : wihtout bonus

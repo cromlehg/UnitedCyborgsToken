@@ -40,8 +40,8 @@ contract Configurator is Ownable {
     mainsale.addMilestone(7, 0);
     mainsale.setPrice(1000000000000000000000);
     mainsale.setWallet(0x95EA6A4ec9F80436854702e5F05d238f27166A03);
-    mainsale.setFoundersTokensWallet(0x95EA6A4ec9F80436854702e5F05d238f27166A03);
-    mainsale.setBountyTokensWallet(0x95EA6A4ec9F80436854702e5F05d238f27166A03);
+    mainsale.setFoundersTokensWallet(0x95EA6A4ec9F80436854702e5F05d238f27166A05);
+    mainsale.setBountyTokensWallet(0x95EA6A4ec9F80436854702e5F05d238f27166A04);
     mainsale.setStart(1525352400);
     mainsale.setMinInvestedLimit(100000000000000000);
     mainsale.setHardcap(60000000000000000000000);
