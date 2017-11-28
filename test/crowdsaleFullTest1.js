@@ -304,14 +304,14 @@ contract('Crowdsale', function(wallets) {
 
 	    {'start': mainsaleStart + 3*week, 'bonus': 0, 'period': 7, 'invested': 0, 'investors': [
 
-		    {       'address'              : wallets[mainsaleInvestorsStartIndex + 4], 
+		    {       'address'              : wallets[mainsaleInvestorsStartIndex + 6], 
 			    'invested'             : ether(1), 
 			    'tokens'               : ether(1000), 
 			    'afterSummaryInvested' : ether(7),
 		            'afterActualInvested'  : ether(4),
 		            'totalSupply'          : allTokens.add(ether(1300).mul(2).add(ether(1200).mul(2)).add(ether(1100).mul(2)).add(ether(1000)))},
 
-	            {       'address'              : wallets[mainsaleInvestorsStartIndex + 5], 
+	            {       'address'              : wallets[mainsaleInvestorsStartIndex + 7], 
 			    'invested'             : ether(1), 
 			    'tokens'               : ether(1000), 
 			    'afterSummaryInvested' : ether(8),
@@ -430,10 +430,6 @@ contract('Crowdsale', function(wallets) {
     tempTotalSupply = await this.token.totalSupply()
     tempTotalSupply.should.be.bignumber.equal(allTokens) 
 
-    console.log('Check summary mainsale minted.')
-    var currentSaleMinted = await currentSale.minted()	  
-    currentSaleMinted.should.be.bignumber.equal(tempSummaryMinted) 
-
     console.log('Check contract invest field balance.')
     curContractBalance = await currentSale.invested()
     curContractBalance.should.be.bignumber.equal(stages[3]['investors'][1]['afterSummaryInvested'])
@@ -460,9 +456,7 @@ contract('Crowdsale', function(wallets) {
     console.log('Finish current sale.')
     await currentSale.finishMinting().should.be.fulfilled
    
-    tempSummaryMinted = tempSummaryMinted.div((new BigNumber(1)).sub(summaryTokensK))
-    allTokens = await this.presale.minted()
-    allTokens = allTokens.add(tempSummaryMinted)
+    tempSummaryMinted = allTokens.div((new BigNumber(1)).sub(summaryTokensK))
 
     var filter = new BigNumber(1000000)
 
@@ -471,7 +465,7 @@ contract('Crowdsale', function(wallets) {
     tempTotalSupply.div(filter).toFixed(0).should.be.bignumber.equal(allTokens.div(filter).toFixed(0)) 
 
     console.log('Check summary mainsale minted.')
-    var currentSaleMinted = await currentSale.minted()	  
+    var currentSaleMinted = await this.token.totalSupply()	  
     currentSaleMinted.div(filter).toFixed(0).should.be.bignumber.equal(tempSummaryMinted.div(filter).toFixed(0)) 
 
     bountyTokensWallet = "0x95EA6A4ec9F80436854702e5F05d238f27166A04"
@@ -483,30 +477,10 @@ contract('Crowdsale', function(wallets) {
     bountyTokensFromContract = await this.token.balanceOf(bountyTokensWallet)
     bountyTokensFromContract.toFixed(0).should.be.bignumber.equal(bountyTokens.toFixed(0))
 
-    console.log('Check dev tokens.')
-    devTokens = tempSummaryMinted.mul(devTokensK)
-    devTokensFromContract = await this.token.balanceOf(devTokensWallet)
-    devTokensFromContract.toFixed(0).should.be.bignumber.equal(devTokens.toFixed(0))
-
     console.log('Check founders tokens.')
     foundersTokens = tempSummaryMinted.mul(foundersTokensK)
     foundersTokensFromContract = await this.token.balanceOf(foundersTokensWallet)
     foundersTokensFromContract.toFixed(0).should.be.bignumber.equal(foundersTokens.toFixed(0))
-
-    console.log('Check advisors tokens.')
-    advisorsTokens = tempSummaryMinted.mul(advisorsTokensK)
-    advisorsTokensFromContract = await this.token.balanceOf(advisorsTokensWallet)
-    advisorsTokensFromContract.toFixed(0).should.be.bignumber.equal(advisorsTokens.toFixed(0))
-
-    console.log('Check growth tokens.')
-    growthTokens = tempSummaryMinted.mul(growthTokensK)
-    growthTokensFromContract = await this.token.balanceOf(growthTokensWallet)
-    growthTokensFromContract.toFixed(0).should.be.bignumber.equal(growthTokens.toFixed(0))
-
-    console.log('Check sec tokens.')
-    secTokens = tempSummaryMinted.mul(secTokensK)
-    secTokensFromContract = await this.token.balanceOf(secTokensWallet)
-    secTokensFromContract.toFixed(0).should.be.bignumber.equal(secTokens.toFixed(0))
 
     console.log('Check tokens transfer')	  
     transferredValue = softcapMinted.mul(new BigNumber(0.5))
